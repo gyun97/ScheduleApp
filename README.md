@@ -8,6 +8,12 @@
 | 일정 수정 | PUT    | /schedule/{id} | request body  | 수정 정보           | 200: 정상 수정 |
 | 일정 삭제 | DELETE | /schedule/{id} | request param | --------------- | 200: 정상 삭제 |
 
+<br>
+<br>
+<br>
 
 
+# ERD
+
+![image](https://github.com/user-attachments/assets/78d0281b-8e11-469c-b631-7a50ee6dc4e4)
 
