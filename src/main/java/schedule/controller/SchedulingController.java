@@ -16,14 +16,22 @@ public class SchedulingController {
 
     private final SchedulingService schedulingService;
 
-//    @GetMapping("/{id}")
-//    public ScheduleDTO getSchedule(@PathVariable Long id, @RequestBody ScheduleDTO scheduleDTO) {
-//        return schedulingService.findSchedule(scheduleDTO);
-//    }
 
+    // 일정 저장
     @PostMapping
-    public ScheduleDTO saveSchedule(@RequestBody ScheduleDTO scheduleDTO) throws SQLException {
-        return schedulingService.saveSchedule(scheduleDTO);
+    public ScheduleDTO save(@RequestBody ScheduleDTO scheduleDTO) throws SQLException {
+        log.info("일정 추가 로직 실행");
+        return schedulingService.save(scheduleDTO);
 
     }
+
+    // 일정 단건 조회
+    @GetMapping("/{id}")
+    public ScheduleDTO findById(@PathVariable Long id) throws SQLException{
+        log.info("조회할 일정 ID: " + id);
+        return schedulingService.findById(id);
+    }
+
+
+
 }

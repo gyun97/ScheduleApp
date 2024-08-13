@@ -23,9 +23,16 @@ public class SchedulingService {
     private final ScheduleRepository scheduleRepository;
 
 
-    public ScheduleDTO saveSchedule(ScheduleDTO scheduleDTO) throws SQLException {
+    // 일정 저장
+    public ScheduleDTO save(ScheduleDTO scheduleDTO) throws SQLException {
         ScheduleEntity scheduleEntity = ScheduleEntity.toEntity(scheduleDTO);
-        return scheduleRepository.saveSchedule(scheduleEntity);
+        return scheduleRepository.save(scheduleEntity);
+
+    }
+
+    // 일정 단건 조회
+    public ScheduleDTO findById(Long id) throws SQLException{
+        return scheduleRepository.findById(id);
 
     }
 

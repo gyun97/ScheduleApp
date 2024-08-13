@@ -1,23 +1,16 @@
 package schedule.repository;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import schedule.dto.ScheduleDTO;
 import schedule.entity.ScheduleEntity;
 
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.NoSuchElementException;
 
 @Repository
 @Slf4j
@@ -32,7 +25,7 @@ public class ScheduleRepository {
 
     KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키 객체
 
-    public ScheduleDTO saveSchedule(ScheduleEntity scheduleEntity) throws SQLException {
+    public ScheduleDTO save(ScheduleEntity scheduleEntity) throws SQLException {
         String sql = "INSERT INTO schedules(director_name, work, pw, schedule_time, registered_date, modified_date) values(?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql,
@@ -55,7 +48,50 @@ public class ScheduleRepository {
         return scheduleDTO;
 
     }
+
+    public ScheduleDTO findById(Long id) throws SQLException {
+
+        String sql = "SELECT * FROM schedules WHERE schedule_id =?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                ScheduleDTO scheduleDTO = new ScheduleDTO();
+                scheduleDTO.setScheduleId(id);
+                scheduleDTO.setDirectorName(resultSet.getString("director_name"));
+                scheduleDTO.setWork(resultSet.getString("work"));
+                scheduleDTO.setPassword(resultSet.getString("pw"));
+                scheduleDTO.setScheduleTime(resultSet.getTimestamp("schedule_time").toLocalDateTime());
+                scheduleDTO.setRegisteredDate(resultSet.getTimestamp("registered_date").toLocalDateTime());
+                scheduleDTO.setModifiedDate(resultSet.getTimestamp("modified_date").toLocalDateTime());
+                return scheduleDTO;
+
+            } else {
+                throw new NoSuchElementException("ID가" + id + "인 스케줄은 존재하지 않습니다.");
+            }
+
+        }, id);
+
+    }
+
 }
+
+
+
+//    private Memo findById(Long id) {
+//        // DB 조회
+//        String sql = "SELECT * FROM memo WHERE id = ?";
+//
+//        return jdbcTemplate.query(sql, resultSet -> {
+//            if(resultSet.next()) {
+//                Memo memo = new Memo();
+//                memo.setUsername(resultSet.getString("username"));
+//                memo.setContents(resultSet.getString("contents"));
+//                return memo;
+//            } else {
+//                return null;
+//            }
+//        }, id);
+//    }
 
 
 
