@@ -2,6 +2,7 @@ package schedule.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,9 @@ import schedule.dto.ScheduleDTO;
 import schedule.entity.ScheduleEntity;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Repository
@@ -73,25 +77,109 @@ public class ScheduleRepository {
 
     }
 
+    public List<ScheduleDTO> findAll(LocalDateTime modifiedDate, String directorName) throws SQLException {
+
+        String sql = "SELECT * FROM schedules WHERE DATE(modified_date) = ? OR director_name = ? ORDER BY modified_date DESC ";
+
+
+        return jdbcTemplate.query(sql, new RowMapper<ScheduleDTO>() {
+            @Override
+            public ScheduleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+                ScheduleDTO scheduleDTO = new ScheduleDTO();
+                scheduleDTO.setScheduleId(rs.getLong("schedule_id"));
+                scheduleDTO.setDirectorName(rs.getString("director_name"));
+                scheduleDTO.setWork(rs.getString("work"));
+                scheduleDTO.setPassword(rs.getString("pw"));
+                scheduleDTO.setScheduleTime(rs.getTimestamp("schedule_time").toLocalDateTime());
+                scheduleDTO.setRegisteredDate(rs.getTimestamp("registered_date").toLocalDateTime());
+                scheduleDTO.setModifiedDate(rs.getTimestamp("modified_date").toLocalDateTime());
+                return scheduleDTO;
+
+            }
+        }, modifiedDate, directorName);
+
+
+    }
+
+
+//    public List<ScheduleDTO> findAll(LocalDateTime modifiedDate, String directorName) {
+//
+//        // 쿼리와 파라미터 리스트 초기화
+//        StringBuilder sql = new StringBuilder("SELECT * FROM schedules WHERE 1=1");
+//        List<Object> params = new ArrayList<>();
+//
+//        // 조건에 따라 쿼리와 파라미터를 추가
+//        if (modifiedDate != null) {
+//            sql.append(" AND modified_date = ?");
+//            params.add(modifiedDate);
+//        }
+//        if (directorName != null && !directorName.isEmpty()) {
+//            sql.append(" AND director_name = ?");
+//            params.add(directorName);
+//        }
+//
+//        // RowMapper를 사용하여 결과를 DTO로 매핑
+//        return jdbcTemplate.query(sql.toString(), params.toArray(), new RowMapper<ScheduleDTO>() {
+//            @Override
+//            public ScheduleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                ScheduleDTO scheduleDTO = new ScheduleDTO();
+//                scheduleDTO.setScheduleId(rs.getLong("schedule_id"));
+//                scheduleDTO.setDirectorName(rs.getString("director_name"));
+//                scheduleDTO.setWork(rs.getString("work"));
+//                scheduleDTO.setPassword(rs.getString("pw"));
+//                scheduleDTO.setScheduleTime(rs.getTimestamp("schedule_time").toLocalDateTime());
+//                scheduleDTO.setRegisteredDate(rs.getTimestamp("registered_date").toLocalDateTime());
+//                scheduleDTO.setModifiedDate(rs.getTimestamp("modified_date").toLocalDateTime());
+//                return scheduleDTO;
+//            }
+//        });
+//    }
+
+
+
+
+
+
+//    @GetMapping("/memos")
+//    public List<MemoResponseDto> getMemos() {
+//        // DB 조회
+//        String sql = "SELECT * FROM memo";
+//
+//        return jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
+//            @Override
+//            public MemoResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                // SQL 의 결과로 받아온 Memo 데이터들을 MemoResponseDto 타입으로 변환해줄 메서드
+//                Long id = rs.getLong("id");
+//                String username = rs.getString("username");
+//                String contents = rs.getString("contents");
+//                return new MemoResponseDto(id, username, contents);
+//            }
+//        });
+//    }
+
+
+
+    public ScheduleDTO update(Long id, ScheduleEntity scheduleEntity) throws SQLException {
+        ScheduleDTO schedule = findById(id);
+
+        if (schedule != null) {
+            String sql = "UPDATE schedules SET work =?, director_name = ?, modified_date = ? WHERE schedule_id =?";
+            jdbcTemplate.update(sql, scheduleEntity.getWork(), scheduleEntity.getDirectorName(), LocalDateTime.now(), schedule.getScheduleId());
+
+            scheduleEntity.setScheduleId(id);
+            scheduleEntity.setModifiedDate(LocalDateTime.now());
+            return ScheduleDTO.toDTO(scheduleEntity);
+        } else {
+            throw new NoSuchElementException("선택한 일정이 존재하지 않습니다.");
+        }
+
+    }
 }
 
 
 
-//    private Memo findById(Long id) {
-//        // DB 조회
-//        String sql = "SELECT * FROM memo WHERE id = ?";
-//
-//        return jdbcTemplate.query(sql, resultSet -> {
-//            if(resultSet.next()) {
-//                Memo memo = new Memo();
-//                memo.setUsername(resultSet.getString("username"));
-//                memo.setContents(resultSet.getString("contents"));
-//                return memo;
-//            } else {
-//                return null;
-//            }
-//        }, id);
-//    }
+
+
 
 
 

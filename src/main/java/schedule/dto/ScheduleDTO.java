@@ -1,8 +1,10 @@
 package schedule.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import schedule.entity.ScheduleEntity;
 
 import java.time.LocalDateTime;
@@ -18,8 +20,15 @@ public class ScheduleDTO {
     private String directorName;
     private String password;
     private String work;
-    private LocalDateTime registeredDate;
+
+
+    private LocalDateTime registeredDate = LocalDateTime.now();
+
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime modifiedDate;
+
+
     private LocalDateTime scheduleTime;
 
 

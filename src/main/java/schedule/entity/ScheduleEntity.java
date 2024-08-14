@@ -1,5 +1,6 @@
 package schedule.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class ScheduleEntity {
     private String password;
     private String work;
     private LocalDateTime registeredDate;
+
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime modifiedDate;
     private LocalDateTime scheduleTime;
 

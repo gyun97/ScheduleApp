@@ -11,6 +11,8 @@ import schedule.entity.ScheduleEntity;
 import schedule.repository.ScheduleRepository;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -31,10 +33,27 @@ public class SchedulingService {
     }
 
     // 일정 단건 조회
-    public ScheduleDTO findById(Long id) throws SQLException{
+    public ScheduleDTO findById(Long id) throws SQLException {
         return scheduleRepository.findById(id);
 
     }
+
+    public List<ScheduleDTO> findAll(ScheduleDTO scheduleDTO) throws SQLException {
+        ScheduleEntity scheduleEntity = ScheduleEntity.toEntity(scheduleDTO);
+        LocalDateTime modifiedDate = scheduleEntity.getModifiedDate();
+        String directorName = scheduleEntity.getDirectorName();
+        return scheduleRepository.findAll(modifiedDate, directorName);
+    }
+
+
+
+    public ScheduleDTO update(Long id, ScheduleDTO scheduleDTO) throws SQLException{
+        ScheduleEntity scheduleEntity = ScheduleEntity.toEntity(scheduleDTO);
+        return scheduleRepository.update(id, scheduleEntity);
+
+    }
+
+
 
 //    public ScheduleDTO findSchedule(ScheduleDTO scheduleDTO) {
 //
