@@ -18,6 +18,6 @@ CREATE TABLE `director` (
                             `director_name`	VARCHAR(50)	NOT NULL
 );
 
-delete from schedules;
+
 
 

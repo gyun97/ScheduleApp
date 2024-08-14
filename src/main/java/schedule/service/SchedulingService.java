@@ -53,9 +53,7 @@ public class SchedulingService {
 
     }
 
-
-
-//    public ScheduleDTO findSchedule(ScheduleDTO scheduleDTO) {
-//
-//    }
+    public Long deleteById(Long id) throws SQLException {
+        return scheduleRepository.deleteById(id);
+    }
 }

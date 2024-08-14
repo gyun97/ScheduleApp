@@ -50,5 +50,9 @@ public class SchedulingController {
         return schedulingService.update(id, scheduleDTO);
     }
 
-
+    @DeleteMapping("{id}")
+    public Long deleteById(@PathVariable Long id) throws SQLException {
+        log.info("일정 삭제");
+        return schedulingService.deleteById(id);
+    }
 }
