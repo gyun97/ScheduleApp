@@ -51,4 +51,17 @@ public class DirectorRepository {
         return directorDTO;
 
     }
+
+    public DirectorDTO findById(Long id) {
+        String sql = "SELECT * FROM director WHERE director_id =?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) -> {
+            DirectorDTO directorDTO = new DirectorDTO();
+            directorDTO.setDirectorId(rs.getLong("director_id"));
+            directorDTO.setEmail(rs.getString("email"));
+            directorDTO.setDirectorName(rs.getString("director_name"));
+            directorDTO.setRegisteredDate(rs.getTimestamp("registered_date").toLocalDateTime());
+            directorDTO.setModifiedDate(rs.getTimestamp("modified_date").toLocalDateTime());
+            return directorDTO;
+        });
+    }
 }

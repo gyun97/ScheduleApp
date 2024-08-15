@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ScheduleEntity {
 
     private Long scheduleId;
-//    private Long directorId;
+    private Long directorId;
     private String directorName;
     private String password;
     private String work;
@@ -27,7 +27,8 @@ public class ScheduleEntity {
     public static ScheduleEntity toEntity(ScheduleDTO scheduleDTO) {
         ScheduleEntity scheduleEntity = new ScheduleEntity();
 
-//        scheduleEntity.setDirectorId(scheduleDTO.getDirectorId());
+        scheduleEntity.setScheduleId(scheduleDTO.getScheduleId());
+        scheduleEntity.setDirectorId(scheduleDTO.getDirectorId());
         scheduleEntity.setDirectorName(scheduleDTO.getDirectorName());
         scheduleEntity.setPassword(scheduleDTO.getPassword());
         scheduleEntity.setWork(scheduleDTO.getWork());

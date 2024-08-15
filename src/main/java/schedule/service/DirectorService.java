@@ -29,6 +29,7 @@ public class DirectorService {
     }
 
 
-
-
+    public DirectorDTO findById(Long id) {
+        return directorRepository.findById(id);
+    }
 }

@@ -1,5 +1,6 @@
 package schedule.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import schedule.entity.DirectorEntity;
 
@@ -10,6 +11,8 @@ public class DirectorDTO {
 
     private Long directorId;
     private String directorName;
+
+    @Email
     private String email;
     private LocalDateTime registeredDate;
     private LocalDateTime modifiedDate;

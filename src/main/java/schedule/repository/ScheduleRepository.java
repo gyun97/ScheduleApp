@@ -30,25 +30,26 @@ public class ScheduleRepository {
     KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키 객체
 
     public ScheduleDTO save(ScheduleEntity scheduleEntity) throws SQLException {
-        String sql = "INSERT INTO schedules(director_name, work, pw, schedule_time, registered_date, modified_date) values(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO schedules(director_id, director_name, work, pw, schedule_time, registered_date, modified_date) values(?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
 
-//            preparedStatement.setLong(1, scheduleEntity.getDirectorId());
-            preparedStatement.setString(1, scheduleEntity.getDirectorName());
-            preparedStatement.setString(2, scheduleEntity.getWork());
-            preparedStatement.setString(3, scheduleEntity.getPassword());
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(scheduleEntity.getScheduleTime()));
-            preparedStatement.setTimestamp(5, Timestamp.valueOf(scheduleEntity.getRegisteredDate()));
+            preparedStatement.setLong(1, scheduleEntity.getDirectorId());
+            preparedStatement.setString(2, scheduleEntity.getDirectorName());
+            preparedStatement.setString(3, scheduleEntity.getWork());
+            preparedStatement.setString(4, scheduleEntity.getPassword());
+            preparedStatement.setTimestamp(5, Timestamp.valueOf(scheduleEntity.getScheduleTime()));
             preparedStatement.setTimestamp(6, Timestamp.valueOf(scheduleEntity.getRegisteredDate()));
+            preparedStatement.setTimestamp(7, Timestamp.valueOf(scheduleEntity.getRegisteredDate()));
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue(); // DB Insert 후 받아온 기본키 확인
-        scheduleEntity.setScheduleId(id);
 
         ScheduleDTO scheduleDTO = ScheduleDTO.toDTO(scheduleEntity);
+        scheduleDTO.setModifiedDate(scheduleEntity.getRegisteredDate());
+        scheduleDTO.setScheduleId(id);
         return scheduleDTO;
 
     }
@@ -61,6 +62,7 @@ public class ScheduleRepository {
             if (resultSet.next()) {
                 ScheduleDTO scheduleDTO = new ScheduleDTO();
                 scheduleDTO.setScheduleId(id);
+                scheduleDTO.setDirectorId(resultSet.getLong("director_id"));
                 scheduleDTO.setDirectorName(resultSet.getString("director_name"));
                 scheduleDTO.setWork(resultSet.getString("work"));
                 scheduleDTO.setPassword(resultSet.getString("pw"));
@@ -77,15 +79,16 @@ public class ScheduleRepository {
 
     }
 
-    public List<ScheduleDTO> findAll(LocalDateTime modifiedDate, String directorName) throws SQLException {
+    public List<ScheduleDTO> findAll(LocalDateTime modifiedDate, Long directorId) throws SQLException {
 
-        String sql = "SELECT * FROM schedules WHERE DATE(modified_date) = ? OR director_name = ? ORDER BY modified_date DESC ";
+        String sql = "SELECT * FROM schedules WHERE DATE(modified_date) = ? OR director_id = ? ORDER BY modified_date DESC ";
 
 
         return jdbcTemplate.query(sql, new RowMapper<ScheduleDTO>() {
             @Override
             public ScheduleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
                 ScheduleDTO scheduleDTO = new ScheduleDTO();
+                scheduleDTO.setDirectorId(rs.getLong("director_id"));
                 scheduleDTO.setScheduleId(rs.getLong("schedule_id"));
                 scheduleDTO.setDirectorName(rs.getString("director_name"));
                 scheduleDTO.setWork(rs.getString("work"));
@@ -96,7 +99,7 @@ public class ScheduleRepository {
                 return scheduleDTO;
 
             }
-        }, modifiedDate, directorName);
+        }, modifiedDate, directorId);
 
 
     }
@@ -110,6 +113,7 @@ public class ScheduleRepository {
 
             scheduleEntity.setScheduleId(id);
             scheduleEntity.setModifiedDate(LocalDateTime.now());
+            schedule.setScheduleId(id);
             return ScheduleDTO.toDTO(scheduleEntity);
         } else {
             throw new NoSuchElementException("선택한 일정이 존재하지 않습니다.");

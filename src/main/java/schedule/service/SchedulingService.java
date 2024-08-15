@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import schedule.dto.ScheduleDTO;
 import schedule.entity.ScheduleEntity;
+import schedule.exception.InvalidPasswordException;
 import schedule.repository.ScheduleRepository;
 
 import java.sql.SQLException;
@@ -41,15 +42,21 @@ public class SchedulingService {
     public List<ScheduleDTO> findAll(ScheduleDTO scheduleDTO) throws SQLException {
         ScheduleEntity scheduleEntity = ScheduleEntity.toEntity(scheduleDTO);
         LocalDateTime modifiedDate = scheduleEntity.getModifiedDate();
-        String directorName = scheduleEntity.getDirectorName();
-        return scheduleRepository.findAll(modifiedDate, directorName);
+//        String directorName = scheduleEntity.getDirectorName();
+        Long directorId = scheduleEntity.getDirectorId();
+        return scheduleRepository.findAll(modifiedDate, directorId);
     }
 
 
 
     public ScheduleDTO update(Long id, ScheduleDTO scheduleDTO) throws SQLException{
         ScheduleEntity scheduleEntity = ScheduleEntity.toEntity(scheduleDTO);
-        return scheduleRepository.update(id, scheduleEntity);
+        if (scheduleEntity.getPassword().equals(scheduleRepository.findById(id).getPassword())) {
+            return scheduleRepository.update(id, scheduleEntity);
+        } else {
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
+        }
+//        return scheduleRepository.update(id, scheduleEntity);
 
     }
 

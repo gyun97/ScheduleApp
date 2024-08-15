@@ -1,9 +1,13 @@
 package schedule.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import schedule.entity.ScheduleEntity;
 
@@ -16,25 +20,28 @@ import java.time.LocalDateTime;
 public class ScheduleDTO {
 
     private Long scheduleId;
-//    private Long directorId;
+    private Long directorId;
     private String directorName;
-    private String password;
-    private String work;
 
+    @NotNull
+    private String password;
+
+    @NotNull
+    @Size(max = 200)
+    private String work;
 
     private LocalDateTime registeredDate = LocalDateTime.now();
 
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 //    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime modifiedDate;
-
-
     private LocalDateTime scheduleTime;
 
 
     public static ScheduleDTO toDTO(ScheduleEntity scheduleEntity) {
         ScheduleDTO scheduleDTO = new ScheduleDTO();
-//        scheduleDTO.setDirectorId(scheduleEntity.getDirectorId());
+        scheduleDTO.setScheduleId(scheduleEntity.getScheduleId());
+        scheduleDTO.setDirectorId(scheduleEntity.getDirectorId());
         scheduleDTO.setDirectorName(scheduleEntity.getDirectorName());
         scheduleDTO.setPassword(scheduleEntity.getPassword());
         scheduleDTO.setWork(scheduleEntity.getWork());
