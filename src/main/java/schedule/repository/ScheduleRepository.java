@@ -121,17 +121,29 @@ public class ScheduleRepository {
 
     }
 
+//    public Long deleteById(Long id) throws SQLException {
+//        ScheduleDTO schedule = findById(id);
+//
+//        if (schedule != null) {
+//            String sql = "DELETE FROM schedules WHERE schedule_id = ?;";
+//            jdbcTemplate.update(sql, id);
+//
+//            return id;
+//        } else {
+//            throw new NoSuchElementException("해당 id를 가진 일정은 존재하지 않습니다.");
+//        }
+//
+//    }
+
     public Long deleteById(Long id) throws SQLException {
         ScheduleDTO schedule = findById(id);
 
-        if (schedule != null) {
+
             String sql = "DELETE FROM schedules WHERE schedule_id = ?;";
             jdbcTemplate.update(sql, id);
 
             return id;
-        } else {
-            throw new NoSuchElementException("해당 id를 가진 일정은 존재하지 않습니다.");
-        }
+
 
     }
 }

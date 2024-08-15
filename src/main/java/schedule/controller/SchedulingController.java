@@ -62,8 +62,8 @@ public class SchedulingController {
 
     // 일정 삭제
     @DeleteMapping("{id}")
-    public Long deleteById(@PathVariable Long id) throws SQLException {
+    public Long deleteById(@PathVariable Long id, @RequestParam String password) throws SQLException {
         log.info("일정 삭제");
-        return schedulingService.deleteById(id);
+        return schedulingService.deleteById(id, password);
     }
 }
