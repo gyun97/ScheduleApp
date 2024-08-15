@@ -12,7 +12,6 @@ import schedule.entity.ScheduleEntity;
 
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -83,7 +82,6 @@ public class ScheduleRepository {
 
         String sql = "SELECT * FROM schedules WHERE DATE(modified_date) = ? OR director_id = ? ORDER BY modified_date DESC ";
 
-
         return jdbcTemplate.query(sql, new RowMapper<ScheduleDTO>() {
             @Override
             public ScheduleDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -103,7 +101,7 @@ public class ScheduleRepository {
 
 
     }
-    
+
     public ScheduleDTO update(Long id, ScheduleEntity scheduleEntity) throws SQLException {
         ScheduleDTO schedule = findById(id);
 
@@ -121,28 +119,14 @@ public class ScheduleRepository {
 
     }
 
-//    public Long deleteById(Long id) throws SQLException {
-//        ScheduleDTO schedule = findById(id);
-//
-//        if (schedule != null) {
-//            String sql = "DELETE FROM schedules WHERE schedule_id = ?;";
-//            jdbcTemplate.update(sql, id);
-//
-//            return id;
-//        } else {
-//            throw new NoSuchElementException("해당 id를 가진 일정은 존재하지 않습니다.");
-//        }
-//
-//    }
-
     public Long deleteById(Long id) throws SQLException {
         ScheduleDTO schedule = findById(id);
 
 
-            String sql = "DELETE FROM schedules WHERE schedule_id = ?;";
-            jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM schedules WHERE schedule_id = ?;";
+        jdbcTemplate.update(sql, id);
 
-            return id;
+        return id;
 
 
     }

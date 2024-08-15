@@ -14,7 +14,7 @@ public class DirectorDTO {
 
     @Email
     private String email;
-    private LocalDateTime registeredDate;
+    private LocalDateTime registeredDate = LocalDateTime.now();
     private LocalDateTime modifiedDate;
 
     public static DirectorDTO toDTO(DirectorEntity directorEntity) {
@@ -26,6 +26,4 @@ public class DirectorDTO {
         directorDTO.setModifiedDate(directorEntity.getModifiedDate());
         return directorDTO;
     }
-
-
 }

@@ -15,11 +15,11 @@ CREATE TABLE `schedules` (
 CREATE TABLE `director` (
                             `director_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
                             `email`	VARCHAR(50)	NOT NULL,
-                            `registrated_date`	DATETIME	NOT NULL,
+                            `registered_date`	DATETIME	NOT NULL,
                             `modified_date`	DATETIME	NULL,
-                            `deleted_date`	DATETIME	NULL,
                             `director_name`	VARCHAR(50)	NOT NULL
 );
+
 
 
 

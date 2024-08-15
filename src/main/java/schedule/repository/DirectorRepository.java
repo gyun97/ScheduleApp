@@ -8,10 +8,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import schedule.dto.DirectorDTO;
-import schedule.dto.ScheduleDTO;
 import schedule.entity.DirectorEntity;
 
-import java.security.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,7 +45,7 @@ public class DirectorRepository {
 
         DirectorDTO directorDTO = DirectorDTO.toDTO(directorEntity);
         directorDTO.setDirectorId(id);
-        directorDTO.setModifiedDate(directorEntity.getModifiedDate());
+        directorDTO.setModifiedDate(directorEntity.getRegisteredDate());
         return directorDTO;
 
     }

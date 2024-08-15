@@ -23,7 +23,4 @@ public class DirectorEntity {
         directorEntity.setModifiedDate(directorDTO.getModifiedDate());
         return directorEntity;
     }
-
-
-
 }
